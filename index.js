@@ -2,7 +2,8 @@ const express = require("express");
 const cors = require("cors");
 
 //Imports
-const { Connection } = require("mongoose");
+const { Connection } = require("./Config/db");
+const { chartsRoutes } = require("./Routes/ChartsData.route");
 
 //Configs
 const app = express();
@@ -10,9 +11,8 @@ require("dotenv").config();
 app.use(express.json());
 const PORT = process.env.PORT || 8000;
 
-app.use("/", (req, res) => {
-    return res.send("Welcoe to the Home")
-});
+//Routes
+app.use("/", chartsRoutes);
 
 app.listen(PORT, async () => {
   try {
