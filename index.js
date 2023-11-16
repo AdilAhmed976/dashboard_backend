@@ -21,5 +21,5 @@ app.listen(PORT, async () => {
   } catch (error) {
     console.log("🚀 ~ file: index.js:19 ~ app.listen ~ error:", error);
   }
-  console.log("connection to the PORT - " + PORT);
+  console.log("PORT - " + PORT);
 });
