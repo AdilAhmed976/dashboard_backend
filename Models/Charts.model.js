@@ -74,4 +74,4 @@ const ChartsSchema = new mongoose.Schema({
 
 const ChartModel = mongoose.model("data", ChartsSchema);
 
-module.exports = { ChartModel };
+module.exports = { ChartModel , ChartsSchema };
