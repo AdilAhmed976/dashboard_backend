@@ -16,7 +16,7 @@ const returnQryAsPerParams = (queryKeys) => {};
 
 chartsRoutes.get("/", async (req, res) => {
   try {
-    let { page = 1, limit = 20 } = req.query;
+    let { page = 1, limit = 10 } = req.query;
 
     // let vars = {
     //   intensity,
@@ -30,7 +30,7 @@ chartsRoutes.get("/", async (req, res) => {
 
     // again default
     page = page == "" ? 1 : page;
-    limit = limit == "" ? 20 : limit;
+    limit = limit == "" ? 10 : limit;
 
     // Use parseInt to ensure page and limit are treated as numbers
     page = parseInt(page);
@@ -60,14 +60,60 @@ chartsRoutes.get("/", async (req, res) => {
   }
 });
 
-chartsRoutes.get("/intensity/:id", async (req, res) => {
+chartsRoutes.get("/likelihood/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-    let { page = 1, limit = 20 } = req.query;
+    const { id = 100 } = req.params;
+    let { page = 1, limit = 10 } = req.query;
 
     // again default
     page = page == "" ? 1 : page;
-    limit = limit == "" ? 20 : limit;
+    limit = limit == "" ? 10 : limit;
+    // again default
+
+    const Charts = await ChartModel.find({ likelihood: { $lte: id } })
+      .maxTimeMS(30000)
+      .limit(limit)
+      .skip((page - 1) * limit);
+
+    Charts.length === 0
+      ? res.json({ message: "NO_DATA_FOUND" })
+      : res.json(Charts);
+  } catch (error) {
+    console.error("Error fetching charts:", error);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+chartsRoutes.get("/relevance/:id", async (req, res) => {
+  try {
+    const { id = 1000 } = req.params;
+    let { page = 1, limit = 10 } = req.query;
+
+    // again default
+    page = page == "" ? 1 : page;
+    limit = limit == "" ? 10 : limit;
+    // again default
+
+    const Charts = await ChartModel.find({ relevance: { $lte: id } })
+      .maxTimeMS(30000)
+      .limit(limit)
+      .skip((page - 1) * limit);
+
+    Charts.length === 0
+      ? res.json({ message: "NO_DATA_FOUND" })
+      : res.json(Charts);
+  } catch (error) {
+    console.error("Error fetching charts:", error);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
+chartsRoutes.get("/intensity/:id", async (req, res) => {
+  try {
+    const { id = 1000 } = req.params;
+    let { page = 1, limit = 10 } = req.query;
+
+    // again default
+    page = page == "" ? 1 : page;
+    limit = limit == "" ? 10 : limit;
     // again default
 
     const Charts = await ChartModel.find({ intensity: { $lte: id } })
@@ -83,5 +129,6 @@ chartsRoutes.get("/intensity/:id", async (req, res) => {
     res.status(500).send({ error: "Internal Server Error" });
   }
 });
+
 
 module.exports = { chartsRoutes };
